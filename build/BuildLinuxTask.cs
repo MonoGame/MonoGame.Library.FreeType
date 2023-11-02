@@ -17,7 +17,8 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
         context.CreateDirectory(buildDir);
         var env = new Dictionary<string, string>
         {
-            { "CFLAGS", "-fPIC" }
+            { "CFLAGS", "-fPIC" },
+            { "CXXFLAGS", "-fPIC" }
         };
         context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DFT_DISABLE_HARFBUZZ=TRUE -DCMAKE_BUILD_TYPE=Release", EnvironmentVariables = env });
         context.StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });

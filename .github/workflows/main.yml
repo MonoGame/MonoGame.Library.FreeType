@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-20.04]
+        os: [windows-latest, macos-latest, ubuntu-22.04]
       fail-fast: false
     steps:
       - name: Add msbuild to PATH
@@ -18,13 +18,7 @@ jobs:
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run:   |
-              sudo apt-get install build-essential git make cmake autoconf automake \
-                libtool pkg-config libasound2-dev libpulse-dev libaudio-dev libjack-dev \
-                libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev \
-                libxinerama-dev libxxf86vm-dev libxss-dev libgl1-mesa-dev libdbus-1-dev \
-                libudev-dev libgles2-mesa-dev libegl1-mesa-dev libibus-1.0-dev \
-                fcitx-libs-dev libsamplerate0-dev libsndio-dev libwayland-dev \
-                libxkbcommon-dev libdrm-dev libgbm-dev
+              sudo apt-get install build-essential git make cmake autoconf automake libpng-dev
         shell: bash
       - name: Clone repository
         uses: actions/checkout@v4
@@ -64,7 +58,7 @@ jobs:
       - name: Download artifacts for Linux x64
         uses: actions/download-artifact@v3
         with:
-          name: FreeType-ubuntu-20.04
+          name: FreeType-ubuntu-22.04
           path: artifacts-linux-x64
       - name: Run CAKE
         run: dotnet run --project ./build/Build.csproj -- "--target=Package"
