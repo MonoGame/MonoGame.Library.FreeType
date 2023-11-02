@@ -14,7 +14,7 @@ public sealed class BuildWindowsTask : FrostingTask<BuildContext>
         MSBuildSettings buildSettings = new()
         {
             Verbosity = Verbosity.Normal,
-            Configuration = "Release",
+            Configuration = "Release Static",
             PlatformTarget = PlatformTarget.x64
         };
 
