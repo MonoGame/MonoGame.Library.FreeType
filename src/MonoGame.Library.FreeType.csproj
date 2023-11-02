@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoWarn>NU5128</NoWarn>
+    <Title>MonoGame build of FreeType Library</Title>
+    <Description>This package contains an FreeType library built for distributing MonoGame games.</Description>
+    <PackageIcon>Icon.png</PackageIcon>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <None Include="..\freetype\LICENSE.txt" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\artifacts-windows-x64\freetype.dll">
+      <Link>freetype.dll</Link>
+      <PackagePath>runtimes\win-x64\native</PackagePath>
+    </Content>
+    <Content Include="..\artifacts-macos\libfreetype.dylib">
+      <Link>libfreetype.dylib</Link>
+      <PackagePath>runtimes\osx\native</PackagePath>
+    </Content>
+    <Content Include="..\artifacts-linux-x64\libfreetype.so">
+      <Link>libfreetype.so</Link>
+      <PackagePath>runtimes\linux-x64\native</PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>
