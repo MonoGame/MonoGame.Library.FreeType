@@ -10,6 +10,9 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
 
     public override void Run(BuildContext context)
     {
+        // Make sure it statically links the dpeendencies
+        context.ReplaceTextInFiles("freetype/CMakeLists.txt", "# Find dependencies", "set(CMAKE_FIND_LIBRARY_SUFFIXES \".a\")");
+
         // Build
         var buildDir = "freetype/build";
         context.CreateDirectory(buildDir);
