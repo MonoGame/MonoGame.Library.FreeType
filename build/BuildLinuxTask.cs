@@ -11,9 +11,7 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
     public override void Run(BuildContext context)
     {
         // Make sure it statically links the dpeendencies
-        context.ReplaceTextInFiles("freetype/meson.build", "dependency('libpng',", "dependency('libpng', static: true,");
-        context.ReplaceTextInFiles("freetype/meson.build", "dependency('harfbuzz',", "dependency('harfbuzz', static: true,");
-        context.ReplaceTextInFiles("freetype/meson.build", "dependency('zlib',", "dependency('zlib', static: true,");
+        context.ReplaceRegexInFiles("freetype/meson.build", @" dependency\('([^']+)',", "dependency('$1', static: true,");
 
         // Build
         context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "setup -Ddefault_library=shared --force-fallback-for=libpng,harfbuzz,zlib builddir" });
