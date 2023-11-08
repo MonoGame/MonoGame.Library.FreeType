@@ -12,6 +12,7 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
     {
         // Make sure it statically links the dpeendencies
         context.ReplaceRegexInFiles("freetype/meson.build", @" dependency\('([^']+)',", "dependency('$1', static: true,");
+        context.ReplaceTextInFiles("freetype/meson.build", "meson.override_dependency('freetype2', freetype_dep)", "");
 
         // Build
         context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "setup -Ddefault_library=shared --force-fallback-for=libpng,harfbuzz,zlib builddir" });
