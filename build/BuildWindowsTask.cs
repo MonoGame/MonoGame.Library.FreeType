@@ -18,6 +18,9 @@ public sealed class BuildWindowsTask : FrostingTask<BuildContext>
             PlatformTarget = PlatformTarget.x64
         };
 
+        //  Ensure statically linked
+        context.ReplaceTextInFiles("freetype/builds/windows/vc2010/freetype.vcxproj", "MultiThreadedDLL", "MultiThreaded");
+
         context.MSBuild("freetype/builds/windows/vc2010/freetype.vcxproj", buildSettings);
         context.CopyFile("freetype-demos/bin/freetype.dll", $"{context.ArtifactsDir}/freetype.dll");
     }
