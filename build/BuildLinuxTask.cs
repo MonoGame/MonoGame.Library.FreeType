@@ -11,15 +11,15 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
     public override void Run(BuildContext context)
     {
         // Make sure it statically links the dpeendencies
-        context.ReplaceTextInFiles("freetype/CMakeLists.txt", "# Find dependencies", "set(CMAKE_FIND_LIBRARY_SUFFIXES \".a\")");
+        context.ReplaceTextInFiles("freetype/meson.build", "dependency('libpng',", "dependency('libpng', static: true,");
+        context.ReplaceTextInFiles("freetype/meson.build", "dependency('harfbuzz',", "dependency('harfbuzz', static: true,");
+        context.ReplaceTextInFiles("freetype/meson.build", "dependency('zlib',", "dependency('zlib', static: true,");
 
         // Build
-        var buildDir = "freetype/build";
-        context.CreateDirectory(buildDir);
-        context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DCMAKE_BUILD_TYPE=Release" });
-        context.StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });
+        context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "setup -Ddefault_library=shared --force-fallback-for=libpng,harfbuzz,zlib builddir" });
+        context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "compile -C builddir" });
 
-        foreach (var filePath in Directory.GetFiles("freetype/build"))
+        foreach (var filePath in Directory.GetFiles("freetype/builddir"))
         {
             if (!filePath.Contains(".so") ||
                 File.GetAttributes(filePath).HasFlag(FileAttributes.ReparsePoint))
