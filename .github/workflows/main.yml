@@ -19,14 +19,14 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get install build-essential git make cmake autoconf automake libpng-dev pkg-config meson
+        run: sudo apt update && sudo apt-get install build-essential git make cmake autoconf automake libpng-dev pkg-config meson
         shell: bash
       - name: Clone repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Run CAKE
-        run: dotnet run --project ./build/Build.csproj
+        run: dotnet run --project ./build/Build.csproj --universalBinary=true
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ env.ACTIONS_RUNTIME_TOKEN }}
           ACTIONS_RUNTIME_URL: "${{ env.ACTIONS_RUNTIME_URL }}"
@@ -46,7 +46,7 @@ jobs:
         with:
           submodules: recursive
       - name: Run CAKE
-        run: dotnet run --project ./build/Build.csproj -- --target=Package --libraryname=FreeType --licensepath=freetype/LICENSE.txt
+        run: dotnet run --project ./build/Build.csproj -- --target=Package --universalBinary=true --libraryname=FreeType --licensepath=freetype/LICENSE.txt
         env:
           ACTIONS_RUNTIME_TOKEN: ${{ env.ACTIONS_RUNTIME_TOKEN }}
           ACTIONS_RUNTIME_URL: "${{ env.ACTIONS_RUNTIME_URL }}"

@@ -16,7 +16,7 @@ public sealed class BuildMacOSTask : FrostingTask<BuildContext>
         // Build
         var buildDir = "freetype/build";
         context.CreateDirectory(buildDir);
-        context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 -DFT_DISABLE_HARFBUZZ=TRUE -DCMAKE_BUILD_TYPE=Release" });
+        context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 -DFT_DISABLE_HARFBUZZ=TRUE -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\"" });
         context.StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });
 
         foreach (var filePath in Directory.GetFiles("freetype/build"))
