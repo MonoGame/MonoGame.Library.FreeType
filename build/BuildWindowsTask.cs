@@ -30,6 +30,6 @@ public sealed class BuildWindowsTask : FrostingTask<BuildContext>
         context.MSBuild("freetype/builds/windows/vc2010/freetype.vcxproj", buildSettings);
         
         context.CreateDirectory($"{context.ArtifactsDir}/{rid}");
-        context.CopyFile($"freetype-demos/bin/{platform}/freetype.dll", $"{context.ArtifactsDir}/{rid}/freetype.dll");
+        context.CopyFile($"freetype-demos/bin/freetype.dll", $"{context.ArtifactsDir}/{rid}/freetype.dll");
     }
 }
