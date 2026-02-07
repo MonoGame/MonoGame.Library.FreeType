@@ -11,17 +11,25 @@ public sealed class BuildWindowsTask : FrostingTask<BuildContext>
 
     public override void Run(BuildContext context)
     {
+        //  Ensure statically linked
+        context.ReplaceTextInFiles("freetype/builds/windows/vc2010/freetype.vcxproj", "MultiThreadedDLL", "MultiThreaded");
+
+        BuildForArchitecture(context, PlatformTarget.x64, "win-x64");
+        BuildForArchitecture(context, PlatformTarget.ARM64, "win-arm64");
+    }
+
+    private void BuildForArchitecture(BuildContext context, PlatformTarget platform, string rid)
+    {
         MSBuildSettings buildSettings = new()
         {
             Verbosity = Verbosity.Normal,
             Configuration = "Release",
-            PlatformTarget = PlatformTarget.x64
+            PlatformTarget = platform
         };
 
-        //  Ensure statically linked
-        context.ReplaceTextInFiles("freetype/builds/windows/vc2010/freetype.vcxproj", "MultiThreadedDLL", "MultiThreaded");
-
         context.MSBuild("freetype/builds/windows/vc2010/freetype.vcxproj", buildSettings);
-        context.CopyFile("freetype-demos/bin/freetype.dll", $"{context.ArtifactsDir}/freetype.dll");
+        
+        context.CreateDirectory($"{context.ArtifactsDir}/{rid}");
+        context.CopyFile($"freetype-demos/bin/{platform}/freetype.dll", $"{context.ArtifactsDir}/{rid}/freetype.dll");
     }
 }
