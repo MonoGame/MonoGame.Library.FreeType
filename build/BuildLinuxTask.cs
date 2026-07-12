@@ -15,8 +15,8 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
         context.ReplaceTextInFiles("freetype/meson.build", "meson.override_dependency('freetype2', freetype_dep)", "");
 
         // Build
-        context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "setup -Ddefault_library=shared -Dbzip2=disabled --force-fallback-for=libpng,harfbuzz,zlib builddir" });
-        context.StartProcess("meson", new ProcessSettings { WorkingDirectory = "freetype", Arguments = "compile -C builddir" });
+        context.StartProcessWithDocker("meson", workingDirectory: "freetype", args: "setup -Ddefault_library=shared -Dbzip2=disabled --force-fallback-for=libpng,harfbuzz,zlib builddir");
+        context.StartProcessWithDocker("meson", workingDirectory: "freetype", args: "compile -C builddir");
 
         foreach (var filePath in Directory.GetFiles("freetype/builddir"))
         {
