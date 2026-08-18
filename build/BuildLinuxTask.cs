@@ -15,7 +15,7 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
         context.ReplaceTextInFiles("freetype/meson.build", "meson.override_dependency('freetype2', freetype_dep)", "");
 
         // Build
-        context.StartProcessWithDocker("meson", workingDirectory: "freetype", args: "setup -Ddefault_library=shared -Dbzip2=disabled --force-fallback-for=libpng,harfbuzz,zlib builddir");
+        context.StartProcessWithDocker("meson", workingDirectory: "freetype", args: "setup --buildtype=release -Db_ndebug=true -Ddefault_library=shared -Dbzip2=disabled --force-fallback-for=libpng,harfbuzz,zlib builddir");
         context.StartProcessWithDocker("meson", workingDirectory: "freetype", args: "compile -C builddir");
 
         foreach (var filePath in Directory.GetFiles("freetype/builddir"))
@@ -24,7 +24,13 @@ public sealed class BuildLinuxTask : FrostingTask<BuildContext>
                 File.GetAttributes(filePath).HasFlag(FileAttributes.ReparsePoint))
                 continue;
 
-            context.CopyFile(filePath, $"{context.ArtifactsDir}/libfreetype.so");
+            var artifactPath = $"{context.ArtifactsDir}/libfreetype.so";
+            context.CopyFile(filePath, artifactPath);
+
+            var stripArguments = new ProcessArgumentBuilder();
+            stripArguments.Append("--strip-unneeded");
+            stripArguments.AppendQuoted(artifactPath);
+            context.StartProcessWithDocker("strip", workingDirectory: "", args: stripArguments);
             return;
         }
 

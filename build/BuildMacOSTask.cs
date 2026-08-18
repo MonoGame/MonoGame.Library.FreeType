@@ -16,7 +16,7 @@ public sealed class BuildMacOSTask : FrostingTask<BuildContext>
         // Build
         var buildDir = "freetype/build";
         context.CreateDirectory(buildDir);
-        context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5 -DFT_DISABLE_BROTLI=TRUE -DFT_DISABLE_HARFBUZZ=TRUE -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\"" });
+        context.StartProcess("cmake", new ProcessSettings { WorkingDirectory = buildDir, Arguments = "../ -DBUILD_SHARED_LIBS=true -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5 -DFT_DISABLE_BROTLI=TRUE -DFT_DISABLE_HARFBUZZ=TRUE -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=\"x86_64;arm64\" -DCMAKE_SHARED_LINKER_FLAGS=-Wl,-x" });
         context.StartProcess("make", new ProcessSettings { WorkingDirectory = buildDir });
 
         foreach (var filePath in Directory.GetFiles("freetype/build"))
@@ -25,7 +25,8 @@ public sealed class BuildMacOSTask : FrostingTask<BuildContext>
                 File.GetAttributes(filePath).HasFlag(FileAttributes.ReparsePoint))
                 continue;
 
-            context.CopyFile(filePath, $"{context.ArtifactsDir}/libfreetype.dylib");
+            var artifactPath = $"{context.ArtifactsDir}/libfreetype.dylib";
+            context.CopyFile(filePath, artifactPath);
             return;
         }
 
